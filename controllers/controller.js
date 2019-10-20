@@ -86,6 +86,7 @@ router.get("/articles-json", function(req, res) {
   });
 });
 
+//remove articles when going to end point
 router.get("/clearAll", function(req, res) {
   Article.remove({}, function(err, doc) {
     if (err) {
@@ -97,6 +98,7 @@ router.get("/clearAll", function(req, res) {
   res.redirect("/articles-json");
 });
 
+//gets to a specific article
 router.get("/readArticle/:id", function(req, res) {
   var articleId = req.params.id;
   var hbsObj = {
@@ -104,6 +106,7 @@ router.get("/readArticle/:id", function(req, res) {
     body: []
   };
 
+  //find article by id and grab a link
   Article.findOne({ _id: articleId })
     .populate("comment")
     .exec(function(err, doc) {
@@ -128,6 +131,8 @@ router.get("/readArticle/:id", function(req, res) {
       }
     });
 });
+
+//creates/post area for user to insert comments from mongodb
 router.post("/comment/:id", function(req, res) {
   var user = req.body.name;
   var content = req.body.comment;
@@ -137,7 +142,7 @@ router.post("/comment/:id", function(req, res) {
     name: user,
     body: content
   };
-
+// variable that will use the comment object saves in database and pushes that to doc
   var newComment = new Comment(commentObj);
 
   newComment.save(function(err, doc) {
